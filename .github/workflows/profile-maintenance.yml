@@ -1,0 +1,306 @@
+name: Profile Maintenance & Dynamic Health Check
+
+on:
+  schedule:
+    # Runs automatically every Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allows manual trigger at any time from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  profile-maintenance:
+    name: Run Profile Maintenance & Discovery
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate Asset Integrity
+        run: |
+          echo "Verifying presence of essential profile assets..."
+          REQUIRED_FILES=(
+            "README.md"
+            "assets/hero.svg"
+            "assets/id.png"
+            "assets/right_pointing.png"
+            "assets/about-life.svg"
+            "assets/stack.svg"
+            "assets/id-dashboard.svg"
+            "assets/connect.svg"
+          )
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "::error::Missing required asset: $file"
+              exit 1
+            fi
+            echo " [OK] $file"
+          done
+          echo "All essential assets are verified and intact."
+
+      - name: Verify Live Project Endpoints
+        run: |
+          echo "Checking HTTP health of featured live deployment URLs..."
+          URLS=(
+            "https://theaivontech.netlify.app/"
+            "https://job-portal-2627.vercel.app/"
+            "https://clonebrand.netlify.app/"
+          )
+          for url in "${URLS[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "$url" || echo "000")
+            if [ "$status" = "200" ]; then
+              echo " [ONLINE] $url (HTTP $status)"
+            else
+              echo "::warning::Project endpoint $url returned HTTP $status"
+            fi
+          done
+
+      - name: Discover Public Repositories for Review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const https = require('https');
+
+          const owner = process.env.OWNER || 'arib-akhtar';
+          const token = process.env.GH_TOKEN;
+
+          // Safe pagination: retrieves all public repos up to 10 pages (1000 repositories)
+          function fetchAllPublicRepos(ownerLogin, authToken, onComplete) {
+            let allRepos = [];
+            let page = 1;
+            const maxPages = 10;
+
+            function getPage() {
+              const options = {
+                hostname: 'api.github.com',
+                path: `/users/${ownerLogin}/repos?per_page=100&type=public&sort=updated&page=${page}`,
+                headers: {
+                  'User-Agent': 'GitHub-Actions-Profile-Maintenance',
+                  ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {})
+                }
+              };
+
+              const req = https.get(options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode !== 200) {
+                    return onComplete(new Error(`GitHub API returned HTTP ${res.statusCode}: ${data.substring(0, 200)}`));
+                  }
+
+                  let repos;
+                  try {
+                    repos = JSON.parse(data);
+                    if (!Array.isArray(repos)) {
+                      return onComplete(new Error(`GitHub API returned non-array payload: ${data.substring(0, 200)}`));
+                    }
+                  } catch (err) {
+                    return onComplete(new Error(`Failed to parse GitHub API response JSON: ${err.message}`));
+                  }
+
+                  allRepos = allRepos.concat(repos);
+
+                  // If page has less than 100 entries, pagination is definitively complete
+                  if (repos.length < 100) {
+                    return onComplete(null, allRepos);
+                  }
+
+                  // If page returned 100 entries and reached maxPages, more repositories exist but cannot be verified safely
+                  if (page >= maxPages) {
+                    return onComplete(new Error(`Repository pagination safety limit reached (${maxPages * 100} repositories). Cannot verify complete portfolio; halting discovery to prevent writing an incomplete report.`));
+                  }
+
+                  page++;
+                  getPage();
+                });
+              });
+
+              req.on('error', (err) => {
+                onComplete(new Error(`Network error while contacting GitHub API: ${err.message}`));
+              });
+            }
+
+            getPage();
+          }
+
+          function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          }
+
+          function extractFeaturedSection(readmeText) {
+            if (!readmeText) return '';
+            const startMarker = '## 🚀 Featured Projects';
+            const startIndex = readmeText.indexOf(startMarker);
+            if (startIndex === -1) return '';
+            const afterStart = readmeText.substring(startIndex + startMarker.length);
+            const nextSectionMatch = afterStart.match(/\n##\s+|\n<!--\s*===/);
+            const endIndex = nextSectionMatch ? nextSectionMatch.index : afterStart.length;
+            return afterStart.substring(0, endIndex);
+          }
+
+          function isRepoFeatured(repo, readmeText, ownerLogin) {
+            const featuredSection = extractFeaturedSection(readmeText);
+            if (!featuredSection) return false;
+
+            const escapedName = escapeRegex(repo.name);
+            const escapedOwner = escapeRegex(ownerLogin);
+
+            // 1. Direct repository URL match strictly within the Featured Projects section
+            const repoUrlRegex = new RegExp(`github\\.com/${escapedOwner}/${escapedName}(?![a-zA-Z0-9_.-])`, 'i');
+            if (repoUrlRegex.test(featuredSection)) return true;
+
+            // 2. Homepage URL match strictly within the Featured Projects section
+            if (repo.homepage && repo.homepage.length > 5) {
+              const cleanHomepage = repo.homepage.replace(/\/+$/, '');
+              if (featuredSection.includes(cleanHomepage)) return true;
+            }
+
+            // 3. Name match strictly within the Featured Projects section
+            const titlePattern = escapeRegex(repo.name).replace(/[-_]/g, '[-_\\s]');
+            const titleRegex = new RegExp(`\\b${titlePattern}\\b`, 'i');
+            if (titleRegex.test(featuredSection)) return true;
+
+            return false;
+          }
+
+          fetchAllPublicRepos(owner, token, (err, repos) => {
+            if (err) {
+              console.error(`::error::Repository discovery failed: ${err.message}`);
+              console.error('Preserving existing PROJECTS_FOR_REVIEW.md and README.md without modification.');
+              process.exit(1);
+            }
+
+            const readme = fs.existsSync('README.md') ? fs.readFileSync('README.md', 'utf8') : '';
+
+            const unfeatured = [];
+            const featured = [];
+
+            repos.forEach(repo => {
+              if (repo.name.toLowerCase() === owner.toLowerCase()) return; // Skip profile repository
+              if (repo.fork) return; // Skip forks
+
+              if (isRepoFeatured(repo, readme, owner)) {
+                featured.push(repo);
+              } else {
+                unfeatured.push(repo);
+              }
+            });
+
+            unfeatured.sort((a, b) => a.name.localeCompare(b.name));
+            featured.sort((a, b) => a.name.localeCompare(b.name));
+
+            let report = '# 📋 Repository Review & Discovery Report\n\n';
+            report += 'This report automatically discovers public repositories on your GitHub account so you can review them and decide if you want to feature them in your curated `README.md`.\n\n';
+
+            report += '## 🆕 New Repositories Available for Review\n\n';
+            if (unfeatured.length === 0) {
+              report += '_No unfeatured public repositories found. All current public projects are already tracked or featured._\n\n';
+            } else {
+              report += '| Repository | Primary Language | Stars | Last Updated | Action Required |\n';
+              report += '| :--- | :--- | :--- | :--- | :--- |\n';
+              unfeatured.forEach(r => {
+                const lang = r.language || 'Not specified';
+                const date = r.updated_at ? r.updated_at.split('T')[0] : 'N/A';
+                report += `| [${r.name}](${r.html_url}) | ${lang} | ${r.stargazers_count} | ${date} | Pending manual review for Featured Projects |\n`;
+              });
+              report += '\n';
+            }
+
+            report += '## ✅ Currently Featured or Referenced Repositories\n\n';
+            if (featured.length === 0) {
+              report += '_No public repositories currently detected in README.md._\n\n';
+            } else {
+              report += '| Repository | Primary Language | Stars | Last Updated | Status |\n';
+              report += '| :--- | :--- | :--- | :--- | :--- |\n';
+              featured.forEach(r => {
+                const lang = r.language || 'Not specified';
+                const date = r.updated_at ? r.updated_at.split('T')[0] : 'N/A';
+                report += `| [${r.name}](${r.html_url}) | ${lang} | ${r.stargazers_count} | ${date} | Featured in README |\n`;
+              });
+              report += '\n';
+            }
+
+            report += '### ℹ️ How to Feature a Project:\n';
+            report += '1. Inspect the new repository above.\n';
+            report += '2. If you would like to feature it, add a new card to the `Featured Projects` table in `README.md` with your verified project description and live link.\n';
+            report += '3. This workflow will never overwrite your curated project descriptions automatically.\n';
+
+            const existingReport = fs.existsSync('PROJECTS_FOR_REVIEW.md') ? fs.readFileSync('PROJECTS_FOR_REVIEW.md', 'utf8') : '';
+            if (existingReport === report) {
+              console.log('No repository status changes detected. PROJECTS_FOR_REVIEW.md is up to date.');
+            } else {
+              fs.writeFileSync('PROJECTS_FOR_REVIEW.md', report, 'utf8');
+              console.log('PROJECTS_FOR_REVIEW.md updated with discovered repository changes.');
+            }
+
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              const summaryContent = report + `\n> Discovery scan completed: ${new Date().toISOString()}\n`;
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summaryContent, 'utf8');
+            }
+          });
+          EOF
+
+      - name: Check Dynamic Statistics Endpoint Availability (Preservation Mode)
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "Checking README dynamic stats markers..."
+          if ! grep -q "<!-- STATS_START -->" README.md || ! grep -q "<!-- STATS_END -->" README.md; then
+            echo "::warning::Dynamic stats markers <!-- STATS_START --> and <!-- STATS_END --> not found. Preserving README."
+            exit 0
+          fi
+
+          echo "Checking dynamic stats service availability..."
+          STATS_CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "https://github-readme-stats.vercel.app/api?username=${OWNER}" || echo "000")
+          LANGS_CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "https://github-readme-stats.vercel.app/api/top-langs/?username=${OWNER}&layout=compact" || echo "000")
+
+          if [ "$STATS_CODE" != "200" ] || [ "$LANGS_CODE" != "200" ]; then
+            echo "::warning::Dynamic stats service returned HTTP stats=$STATS_CODE, langs=$LANGS_CODE. Service may be slow or down; preserving existing README content intact."
+            exit 0
+          fi
+
+          echo "Dynamic stats service is responsive (HTTP 200)."
+          echo "Note: This workflow step monitors service availability. It does not manually overwrite or guarantee upstream data refresh."
+          echo "GitHub profile stats badges are rendered dynamically on demand via GitHub's Camo image cache."
+
+      - name: Commit & Push Changes (Selective Staging)
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          STAGED_FILES=()
+
+          # Explicitly check only allowed maintenance files (NO git add -A or git add .)
+          if [ -f "PROJECTS_FOR_REVIEW.md" ]; then
+            if ! git diff --quiet PROJECTS_FOR_REVIEW.md 2>/dev/null || git status --porcelain PROJECTS_FOR_REVIEW.md | grep -q '??'; then
+              git add PROJECTS_FOR_REVIEW.md
+              STAGED_FILES+=("PROJECTS_FOR_REVIEW.md")
+            fi
+          fi
+
+          if [ -f "README.md" ]; then
+            if ! git diff --quiet README.md 2>/dev/null; then
+              git add README.md
+              STAGED_FILES+=("README.md")
+            fi
+          fi
+
+          if [ ${#STAGED_FILES[@]} -eq 0 ] || git diff --staged --quiet; then
+            echo "No changes detected in allowed maintenance files. Working tree clean; skipping commit."
+          else
+            echo "Staged files for maintenance commit: ${STAGED_FILES[*]}"
+            git commit -m "chore(profile): update repository review list [skip ci]"
+            git push
+          fi
