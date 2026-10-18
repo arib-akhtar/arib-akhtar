@@ -4,9 +4,8 @@
 <img src="assets/hero.svg" alt="Arib Akhtar — Full Stack Developer" width="100%"/>
 
 <p align="center">
-  <img src="assets/id.png" alt="Arib profile portrait" width="250"/>
-  &nbsp;&nbsp;
-  <img src="assets/right_pointing.png" alt="Arib pointing toward the content" width="500"/>
+  <img src="assets/id.png" alt="Arib profile portrait" width="220"/>
+  <img src="assets/right_pointing.png" alt="Arib pointing toward the content" width="480"/>
 </p>
 
 <br/>
