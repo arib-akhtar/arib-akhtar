@@ -1,0 +1,35 @@
+ARIB AKHTAR — GITHUB PROFILE DESIGN
+===================================
+
+FILES
+- README.md
+- assets/hero.svg
+- assets/id.png (your supplied transparent portrait)
+- assets/right_pointing.png (your supplied transparent pointing image)
+- assets/about-life.svg
+- assets/stack.svg
+- assets/id-dashboard.svg
+- assets/connect.svg
+- PREVIEW.html
+- UPLOAD_GUIDE.txt
+
+UPLOAD STEPS
+1. Extract the ZIP on your computer.
+2. Open https://github.com/arib-akhtar/arib-akhtar
+3. Click Add file > Upload files.
+4. Upload README.md and the entire assets folder, keeping the folder structure.
+   If dragging a folder is not supported, create assets in GitHub and upload each SVG,
+   or drag all files from assets into the upload area after opening the assets folder.
+5. Ensure README.md is at the repository root and SVGs are inside assets/.
+6. Click Commit changes.
+7. Open https://github.com/arib-akhtar to view the profile.
+
+IMPORTANT
+- This package replaces the current README with the designed version.
+- SVG animations are CSS/SVG animation only; no JavaScript or foreignObject.
+- GitHub may disable some SVG animation in certain contexts. The artwork should still
+  remain readable if animation is not rendered.
+- The illustrated avatar is a decorative vector illustration, not a photorealistic
+  portrait based on your photo.
+- Project descriptions are intentionally general because source-code details were not
+  independently verified.

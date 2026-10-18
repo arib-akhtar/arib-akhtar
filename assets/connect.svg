@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="160" viewBox="0 0 1200 160" role="img" aria-labelledby="title">
+<title id="title">Connect with Arib Akhtar</title>
+<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#247bff" stop-opacity=".18"/><stop offset="1" stop-color="#ff354f" stop-opacity=".16"/></linearGradient></defs>
+<rect width="1200" height="160" rx="22" fill="url(#g)" stroke="#1d2b4a"/>
+<text x="38" y="56" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" fill="#f3f6ff">Have an idea? Let's connect.</text>
+<text x="38" y="91" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="#9ca9c9">Open to learning, collaboration, and conversations about web development.</text>
+<g transform="translate(960 42)" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="0" y="0" width="56" height="56" rx="14" stroke="#247bff"/><path d="M14 18h28M14 28h28M14 38h18" stroke="#247bff"/>
+  <path d="M79 0h56v56H79z" stroke="#ff354f"/><path d="M91 17l16 13 16-13M91 39l11-9M123 39l-11-9" stroke="#ff354f"/>
+</g>
+</svg>

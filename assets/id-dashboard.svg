@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="230" viewBox="0 0 1200 230" role="img" aria-labelledby="title">
+<title id="title">Arib's developer dashboard</title>
+<rect width="1200" height="230" rx="22" fill="#0d1427" stroke="#1d2b4a"/>
+<text x="38" y="46" font-family="Arial,Helvetica,sans-serif" font-size="16" letter-spacing="4" fill="#ff354f">DEVELOPER DASHBOARD</text>
+<text x="38" y="78" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#f3f6ff">Build. Test. Learn. Repeat.</text>
+<g transform="translate(38 106)">
+  <rect width="350" height="83" rx="14" fill="#070b16" stroke="#247bff"/>
+  <text x="20" y="29" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#9ca9c9">FOCUS</text>
+  <text x="20" y="57" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f3f6ff">Full Stack Development</text>
+  <circle cx="318" cy="25" r="6" fill="#247bff"><animate attributeName="opacity" values=".3;1;.3" dur="1.8s" repeatCount="indefinite"/></circle>
+</g>
+<g transform="translate(414 106)">
+  <rect width="350" height="83" rx="14" fill="#070b16" stroke="#ff354f"/>
+  <text x="20" y="29" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#9ca9c9">CURRENT MODE</text>
+  <text x="20" y="57" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f3f6ff">Learn by building</text>
+  <path d="M305 20l10 10-10 10M315 30h-23" fill="none" stroke="#ff354f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <animateTransform attributeName="transform" type="translate" values="0 0;5 0;0 0" dur="1.7s" repeatCount="indefinite"/>
+  </path>
+</g>
+<g transform="translate(790 106)">
+  <rect width="372" height="83" rx="14" fill="#070b16" stroke="#247bff"/>
+  <text x="20" y="29" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#9ca9c9">NEXT GOAL</text>
+  <text x="20" y="57" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="#f3f6ff">Ship more web projects</text>
+  <path d="M325 53l13-28 13 28-13-7Z" fill="#247bff" opacity=".85"/>
+</g>
+</svg>

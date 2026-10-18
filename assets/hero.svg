@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title desc">
+<title id="title">Arib Akhtar — Full Stack Developer</title>
+<desc id="desc">Animated navy banner with electric blue and crimson accents.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070b16"/><stop offset="1" stop-color="#101b36"/></linearGradient>
+  <linearGradient id="line" x1="0" x2="1"><stop stop-color="#247bff" stop-opacity="0"/><stop offset=".5" stop-color="#247bff"/><stop offset="1" stop-color="#ff354f" stop-opacity="0"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1200" height="330" rx="24" fill="url(#bg)"/>
+<g fill="none" stroke="#247bff" stroke-opacity=".22">
+  <path d="M720 0V330M780 0V330M840 0V330M900 0V330M960 0V330M1020 0V330M1080 0V330M1140 0V330" />
+  <path d="M680 40H1200M680 100H1200M680 160H1200M680 220H1200M680 280H1200"/>
+</g>
+<circle cx="1015" cy="165" r="112" fill="#247bff" opacity=".07"/>
+<circle cx="1015" cy="165" r="78" fill="none" stroke="#247bff" stroke-width="1.5" stroke-dasharray="8 12">
+  <animateTransform attributeName="transform" type="rotate" from="0 1015 165" to="360 1015 165" dur="30s" repeatCount="indefinite"/>
+</circle>
+<circle cx="1015" cy="165" r="53" fill="none" stroke="#ff354f" stroke-width="2" stroke-dasharray="28 18">
+  <animateTransform attributeName="transform" type="rotate" from="360 1015 165" to="0 1015 165" dur="18s" repeatCount="indefinite"/>
+</circle>
+<g filter="url(#glow)">
+  <path d="M900 165l-24 22 24 22M1130 165l24 22-24 22M1052 130l-38 72" fill="none" stroke="#247bff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="1015" cy="165" r="10" fill="#ff354f"><animate attributeName="r" values="8;13;8" dur="2.2s" repeatCount="indefinite"/></circle>
+</g>
+<text x="70" y="82" font-family="Arial,Helvetica,sans-serif" font-size="17" letter-spacing="5" fill="#9ca9c9">PORTFOLIO / GITHUB</text>
+<text x="65" y="158" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="56" fill="#f3f6ff">ARIB AKHTAR</text>
+<rect x="70" y="181" width="82" height="5" rx="2.5" fill="#247bff"/>
+<rect x="157" y="181" width="38" height="5" rx="2.5" fill="#ff354f"/>
+<text x="70" y="225" font-family="Arial,Helvetica,sans-serif" font-size="25" fill="#f3f6ff">Full Stack Developer</text>
+<text x="70" y="262" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="#9ca9c9">Building the web, one project at a time.</text>
+<path d="M70 300H1130" stroke="url(#line)" stroke-width="2">
+  <animate attributeName="stroke-dasharray" values="0 1200;600 600;1200 0" dur="5s" repeatCount="indefinite"/>
+</path>
+<circle cx="1095" cy="56" r="4" fill="#ff354f"><animate attributeName="opacity" values=".25;1;.25" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="1130" cy="80" r="3" fill="#247bff"><animate attributeName="opacity" values="1;.3;1" dur="2.8s" repeatCount="indefinite"/></circle>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="255" viewBox="0 0 1200 255" role="img" aria-labelledby="title">
+<title id="title">Technologies Arib is learning</title>
+<rect width="1200" height="255" rx="22" fill="#070b16" stroke="#1d2b4a"/>
+<text x="42" y="48" font-family="Arial,Helvetica,sans-serif" font-size="16" letter-spacing="4" fill="#247bff">CURRENT LEARNING MAP</text>
+<text x="42" y="82" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#f3f6ff">Tools I'm exploring</text>
+<g font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="600" text-anchor="middle">
+  <g transform="translate(40 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#247bff"/><text x="77" y="32" fill="#f3f6ff">HTML5</text><rect y="60" width="155" height="4" rx="2" fill="#247bff"><animate attributeName="width" values="35;120;35" dur="5s" repeatCount="indefinite"/></rect></g>
+  <g transform="translate(215 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#247bff"/><text x="77" y="32" fill="#f3f6ff">CSS3</text><rect y="60" width="155" height="4" rx="2" fill="#247bff"><animate attributeName="width" values="120;55;120" dur="4s" repeatCount="indefinite"/></rect></g>
+  <g transform="translate(390 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#ff354f"/><text x="77" y="32" fill="#f3f6ff">JavaScript</text><rect y="60" width="155" height="4" rx="2" fill="#ff354f"><animate attributeName="width" values="45;105;45" dur="4.5s" repeatCount="indefinite"/></rect></g>
+  <g transform="translate(565 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#247bff"/><text x="77" y="32" fill="#f3f6ff">React</text><rect y="60" width="155" height="4" rx="2" fill="#247bff"><animate attributeName="width" values="30;95;30" dur="5.2s" repeatCount="indefinite"/></rect></g>
+  <g transform="translate(740 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#ff354f"/><text x="77" y="32" fill="#f3f6ff">Node.js</text><rect y="60" width="155" height="4" rx="2" fill="#ff354f"><animate attributeName="width" values="105;42;105" dur="4.8s" repeatCount="indefinite"/></rect></g>
+  <g transform="translate(915 112)"><rect width="155" height="52" rx="12" fill="#0d1427" stroke="#247bff"/><text x="77" y="32" fill="#f3f6ff">MongoDB</text><rect y="60" width="155" height="4" rx="2" fill="#247bff"><animate attributeName="width" values="55;125;55" dur="5.5s" repeatCount="indefinite"/></rect></g>
+</g>
+<text x="42" y="220" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#9ca9c9">Also exploring: Tailwind CSS · Express.js · REST APIs · Git · GitHub · VS Code</text>
+</svg>

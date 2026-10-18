@@ -1,87 +1,77 @@
-# Hey, I'm Arib Akhtar 👋
+<!-- ARIB PROFILE README — replace this file in your arib-akhtar/arib-akhtar repository -->
+<div align="center">
 
-### Full Stack Developer | Building the Web, One Project at a Time 🚀
+<img src="assets/hero.svg" alt="Arib Akhtar — Full Stack Developer" width="100%"/>
+
+<p align="center">
+  <img src="assets/id.png" alt="Arib profile portrait" width="250"/>
+  &nbsp;&nbsp;
+  <img src="assets/right_pointing.png" alt="Arib pointing toward the content" width="500"/>
+</p>
+
+<br/>
+
+### Full Stack Developer · Frontend · Backend · Creative Web
+
+**I build websites, explore new technologies, and keep learning by creating.**
 
 📍 Ranchi, India
 
-I'm a developer who enjoys creating websites and exploring new technologies. I love coding, learning new things, and turning ideas into web experiences.
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-247bff?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arib-akhtar-02292442b/)
+[![Instagram](https://img.shields.io/badge/Instagram-Follow-ff354f?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/arib___007/)
+[![GitHub](https://img.shields.io/badge/GitHub-arib--akhtar-f3f6ff?style=for-the-badge&logo=github&logoColor=070b16)](https://github.com/arib-akhtar)
 
-- 💻 Interested in frontend and backend development
-- 🌱 Continuously learning and improving my development skills
-- 🛠️ Building projects to gain practical experience
-- 🎯 Working towards becoming a better full stack developer
-
----
-
-## 👨‍💻 What I Do
-
-- 🎨 **Frontend Development** — Building user interfaces and web experiences
-- ⚙️ **Backend Development** — Learning server-side development and application logic
-- 🌐 **Full Stack Development** — Exploring how frontend and backend work together
-- ✨ **Creative Web Development** — Experimenting with ideas and modern web designs
+</div>
 
 ---
 
-## 🛠️ Technologies I'm Learning
+<img src="assets/about-life.svg" alt="About Arib" width="100%"/>
 
-These are my learning areas, not a claim of expertise in every technology.
+## ✦ About Me
 
-**Frontend**
-- HTML5
-- CSS3
-- JavaScript
-- React.js
-- Tailwind CSS
+- 💻 Interested in both frontend and backend development
+- 🌱 Learning new tools and improving through practical projects
+- 🧩 Enjoy creating websites and experimenting with web experiences
+- 🎤 Outside coding: speaking, learning new things, and exploring ideas
 
-**Backend**
-- Node.js
-- Express.js
-- REST APIs
+<img src="assets/stack.svg" alt="Technologies I'm learning" width="100%"/>
 
-**Database & Tools**
-- MongoDB
-- Git
-- GitHub
-- Visual Studio Code
+> **Learning in progress:** the technologies below represent areas I'm learning and exploring, not a claim of expertise in every tool.
 
----
+## 🚀 Featured Projects
 
-## 🚀 My Projects
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <h3>01 · Aivon Tech</h3>
+      A technology-related web project.
+      <br/><br/>
+      <a href="https://theaivontech.netlify.app/">↗ View live project</a>
+    </td>
+    <td width="33%" valign="top">
+      <h3>02 · Job Portal</h3>
+      A web project in the job portal category.
+      <br/><br/>
+      <a href="https://job-portal-2627.vercel.app/">↗ View live project</a>
+    </td>
+    <td width="33%" valign="top">
+      <h3>03 · Amazon Clone</h3>
+      An e-commerce website project inspired by Amazon.
+      <br/><br/>
+      <a href="https://clonebrand.netlify.app/">↗ View live project</a>
+    </td>
+  </tr>
+</table>
 
-### 1. Aivon Tech
-A web project focused on presenting a technology-related brand or service.
-
-🔗 [View Live Project](https://theaivontech.netlify.app/)
-
-### 2. Job Portal
-A web project in the job portal category.
-
-🔗 [View Live Project](https://job-portal-2627.vercel.app/)
-
-### 3. Amazon Clone
-An e-commerce website project inspired by Amazon.
-
-🔗 [View Live Project](https://clonebrand.netlify.app/)
-
----
-
-## 🎯 Beyond Coding
-
-- 🎤 Speaking
-- 📚 Learning new things
-- 💻 Coding and exploring new ideas
-
----
+<img src="assets/id-dashboard.svg" alt="Developer dashboard" width="100%"/>
 
 ## 🤝 Let's Connect
 
-I'm always interested in connecting with people who enjoy technology, development, and learning.
+<img src="assets/connect.svg" alt="Connect with Arib" width="100%"/>
 
-- 💼 [LinkedIn](https://www.linkedin.com/in/arib-akhtar-02292442b/)
-- 📸 [Instagram](https://www.instagram.com/arib___007/)
+<div align="center">
 
----
+**Thanks for visiting my profile.**  
+*Keep learning · Keep building · Keep growing*
 
-⭐ Thanks for visiting my GitHub profile!
-
-*Keep learning. Keep building. Keep growing.*
+</div>

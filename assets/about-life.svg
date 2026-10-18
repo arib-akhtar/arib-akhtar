@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-labelledby="title">
+<title id="title">About Arib — curious builder and lifelong learner</title>
+<defs><linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0d1427"/><stop offset="1" stop-color="#101b36"/></linearGradient></defs>
+<rect width="1200" height="260" rx="22" fill="url(#panel)" stroke="#1d2b4a"/>
+<path d="M0 220C190 180 270 270 450 215S770 170 940 215 1110 230 1200 185" fill="none" stroke="#247bff" stroke-opacity=".28" stroke-width="2"/>
+<path d="M0 238C190 198 270 288 450 233S770 188 940 233 1110 248 1200 203" fill="none" stroke="#ff354f" stroke-opacity=".22" stroke-width="2"/>
+<g transform="translate(50 34)">
+  <circle cx="85" cy="84" r="69" fill="#247bff" opacity=".12"/>
+  <circle cx="85" cy="84" r="57" fill="none" stroke="#247bff" stroke-dasharray="4 9">
+    <animateTransform attributeName="transform" type="rotate" from="0 85 84" to="360 85 84" dur="25s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M63 64Q85 34 107 64L112 94Q85 118 58 94Z" fill="#f3f6ff" opacity=".95"/>
+  <path d="M58 66Q56 39 83 37Q111 37 112 64L102 59 95 48 77 55 65 73Z" fill="#070b16"/>
+  <path d="M72 80h10M91 80h10" stroke="#070b16" stroke-width="3" stroke-linecap="round"/>
+  <path d="M78 96Q85 101 93 96" fill="none" stroke="#ff354f" stroke-width="3" stroke-linecap="round"/>
+  <path d="M41 157Q42 119 85 117Q128 119 129 157Z" fill="#172747" stroke="#247bff" stroke-width="2"/>
+  <path d="M73 120l12 17 12-17" fill="#f3f6ff"/>
+  <path d="M85 137l-7 12 7 8 7-8Z" fill="#ff354f"/>
+</g>
+<text x="250" y="66" font-family="Arial,Helvetica,sans-serif" font-size="16" letter-spacing="4" fill="#247bff">A LITTLE ABOUT ME</text>
+<text x="250" y="108" font-family="Arial,Helvetica,sans-serif" font-size="29" font-weight="700" fill="#f3f6ff">Curious mind. Creative builds.</text>
+<text x="250" y="145" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#9ca9c9">I enjoy creating websites and learning how things work</text>
+<text x="250" y="172" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#9ca9c9">from the interface to the backend.</text>
+<g font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#f3f6ff">
+  <rect x="250" y="197" width="118" height="34" rx="17" fill="#247bff" fill-opacity=".18" stroke="#247bff"/><text x="309" y="219" text-anchor="middle">BUILD</text>
+  <rect x="380" y="197" width="118" height="34" rx="17" fill="#ff354f" fill-opacity=".12" stroke="#ff354f"/><text x="439" y="219" text-anchor="middle">LEARN</text>
+  <rect x="510" y="197" width="118" height="34" rx="17" fill="#247bff" fill-opacity=".18" stroke="#247bff"/><text x="569" y="219" text-anchor="middle">IMPROVE</text>
+</g>
+<g transform="translate(930 55)" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M0 30l-28 28 28 28M54 30l28 28-28 28" stroke="#247bff"/>
+  <path d="M44 12L10 103" stroke="#ff354f"/>
+  <circle cx="28" cy="58" r="68" stroke="#1d2b4a" stroke-dasharray="5 12">
+    <animateTransform attributeName="transform" type="rotate" from="0 28 58" to="360 28 58" dur="22s" repeatCount="indefinite"/>
+  </circle>
+</g>
+</svg>
