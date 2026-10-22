@@ -47,24 +47,7 @@ jobs:
           done
           echo "All essential assets are verified and intact."
 
-      - name: Verify Live Project Endpoints
-        run: |
-          echo "Checking HTTP health of featured live deployment URLs..."
-          URLS=(
-            "https://theaivontech.netlify.app/"
-            "https://job-portal-2627.vercel.app/"
-            "https://clonebrand.netlify.app/"
-          )
-          for url in "${URLS[@]}"; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "$url" || echo "000")
-            if [ "$status" = "200" ]; then
-              echo " [ONLINE] $url (HTTP $status)"
-            else
-              echo "::warning::Project endpoint $url returned HTTP $status"
-            fi
-          done
-
-      - name: Discover Public Repositories for Review
+      - name: Auto-Maintain Featured Projects & Discover Repositories
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
@@ -139,118 +122,284 @@ jobs:
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           }
 
-          function extractFeaturedSection(readmeText) {
-            if (!readmeText) return '';
-            const startMarker = '## 🚀 Featured Projects';
-            const startIndex = readmeText.indexOf(startMarker);
-            if (startIndex === -1) return '';
-            const afterStart = readmeText.substring(startIndex + startMarker.length);
-            const nextSectionMatch = afterStart.match(/\n##\s+|\n<!--\s*===/);
-            const endIndex = nextSectionMatch ? nextSectionMatch.index : afterStart.length;
-            return afterStart.substring(0, endIndex);
+          function parseExistingCards(tableHtml) {
+            const cards = [];
+            const tdRegex = /<td[\s\S]*?<\/td>/gi;
+            let match;
+            while ((match = tdRegex.exec(tableHtml)) !== null) {
+              const tdContent = match[0].trim();
+              const textOnly = tdContent.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, '').trim();
+              if (tdContent.includes('<h3') || tdContent.includes('<a') || textOnly.length > 0) {
+                cards.push(tdContent);
+              }
+            }
+            return cards;
           }
 
-          function isRepoFeatured(repo, readmeText, ownerLogin) {
-            const featuredSection = extractFeaturedSection(readmeText);
-            if (!featuredSection) return false;
+          function renderTable(cards) {
+            if (!cards || cards.length === 0) return '';
+            let html = '<table>\n';
+            for (let i = 0; i < cards.length; i += 3) {
+              html += '  <tr>\n';
+              for (let j = i; j < i + 3; j++) {
+                if (j < cards.length) {
+                  html += '    ' + cards[j] + '\n';
+                } else {
+                  html += '    <td width="33%" valign="top"></td>\n';
+                }
+              }
+              html += '  </tr>\n';
+            }
+            html += '</table>';
+            return html;
+          }
 
-            const escapedName = escapeRegex(repo.name);
-            const escapedOwner = escapeRegex(ownerLogin);
+          function buildRepoCard(repo, index, badgeColor) {
+            const num = String(index).padStart(2, '0');
+            const cleanName = repo.name.replace(/[-_]/g, ' ');
+            const lang = repo.language || 'Code';
+            const badge = `https://img.shields.io/badge/Language-${encodeURIComponent(lang)}-${badgeColor}?style=flat-square`;
+            
+            const desc = repo.description && repo.description.trim() 
+              ? repo.description.trim() 
+              : `Source code repository for ${cleanName}.`;
 
-            // 1. Direct repository URL match strictly within the Featured Projects section
-            const repoUrlRegex = new RegExp(`github\\.com/${escapedOwner}/${escapedName}(?![a-zA-Z0-9_.-])`, 'i');
-            if (repoUrlRegex.test(featuredSection)) return true;
+            let links = '';
+            if (repo.homepage && typeof repo.homepage === 'string' && repo.homepage.startsWith('http')) {
+              links += `<a href="${repo.homepage}" target="_blank"><b>↗ View Live Project</b></a>\n      <br/>\n      `;
+            }
+            links += `<a href="${repo.html_url}" target="_blank"><b>↗ Source Repository</b></a>`;
 
-            // 2. Homepage URL match strictly within the Featured Projects section
-            if (repo.homepage && repo.homepage.length > 5) {
-              const cleanHomepage = repo.homepage.replace(/\/+$/, '');
-              if (featuredSection.includes(cleanHomepage)) return true;
+            let cardHtml = '<td width="33%" valign="top">\n';
+            cardHtml += `      <h3>${num} · ${cleanName}</h3>\n`;
+            cardHtml += `      <img src="${badge}" alt="${lang}"/>\n`;
+            cardHtml += '      <br/><br/>\n';
+            cardHtml += `      ${desc}\n`;
+            cardHtml += '      <br/><br/>\n';
+            cardHtml += '      ' + links + '\n';
+            cardHtml += '    </td>';
+            return cardHtml;
+          }
+
+          function updateFeaturedProjects(readmeText, publicRepos, ownerLogin) {
+            const startMarker = '<!-- PROJECTS_START -->';
+            const endMarker = '<!-- PROJECTS_END -->';
+
+            const startIndex = readmeText.indexOf(startMarker);
+            const endIndex = readmeText.indexOf(endMarker);
+
+            if (startIndex === -1 || endIndex === -1) {
+              return { ok: false, message: 'Markers <!-- PROJECTS_START --> and <!-- PROJECTS_END --> not found in README.md.' };
             }
 
-            // 3. Name match strictly within the Featured Projects section
-            const titlePattern = escapeRegex(repo.name).replace(/[-_]/g, '[-_\\s]');
-            const titleRegex = new RegExp(`\\b${titlePattern}\\b`, 'i');
-            if (titleRegex.test(featuredSection)) return true;
+            const existingBlock = readmeText.substring(startIndex + startMarker.length, endIndex).trim();
+            const existingCards = parseExistingCards(existingBlock);
 
-            return false;
+            if (existingCards.length === 0) {
+              return { ok: false, message: 'Could not parse any existing project cards from README.md.' };
+            }
+
+            const updatedCards = [...existingCards];
+            const newFeatured = [];
+
+            const candidateRepos = publicRepos.filter(r => 
+              r.name.toLowerCase() !== ownerLogin.toLowerCase() && !r.fork
+            );
+
+            candidateRepos.forEach(repo => {
+              const escapedName = escapeRegex(repo.name);
+              const escapedOwner = escapeRegex(ownerLogin);
+              const repoUrlRegex = new RegExp(`github\\.com/${escapedOwner}/${escapedName}(?![a-zA-Z0-9_.-])`, 'i');
+              const titlePattern = escapeRegex(repo.name).replace(/[-_]/g, '[-_\\s]');
+              const titleRegex = new RegExp(`\\b${titlePattern}\\b`, 'i');
+
+              let matchingIndex = -1;
+              for (let i = 0; i < updatedCards.length; i++) {
+                const card = updatedCards[i];
+                if (repoUrlRegex.test(card)) {
+                  matchingIndex = i;
+                  break;
+                }
+                if (repo.homepage && typeof repo.homepage === 'string' && repo.homepage.length > 5) {
+                  const cleanHomepage = repo.homepage.replace(/\/+$/, '');
+                  if (card.includes(cleanHomepage)) {
+                    matchingIndex = i;
+                    break;
+                  }
+                }
+                if (titleRegex.test(card)) {
+                  matchingIndex = i;
+                  break;
+                }
+              }
+
+              if (matchingIndex === -1) {
+                // New repository to add to Featured Projects
+                const nextIndex = updatedCards.length + 1;
+                const badgeColor = nextIndex % 2 === 0 ? 'ff354f' : '247bff';
+                const newCard = buildRepoCard(repo, nextIndex, badgeColor);
+                updatedCards.push(newCard);
+                newFeatured.push(repo);
+              } else {
+                // Repository already featured - check if safe updates apply
+                let card = updatedCards[matchingIndex];
+                let cardModified = false;
+
+                // If repo has a live homepage and card doesn't have a live link yet, add it
+                if (repo.homepage && typeof repo.homepage === 'string' && repo.homepage.startsWith('http')) {
+                  const cleanHp = repo.homepage.replace(/\/+$/, '');
+                  if (!card.includes(cleanHp) && !card.includes('↗ View Live Project')) {
+                    const sourceRepoMatch = card.match(/<a\s+href="[^"]*github\.com[^"]*"[^>]*>[\s\S]*?<\/a>/i);
+                    if (sourceRepoMatch) {
+                      const liveLinkHtml = `<a href="${repo.homepage}" target="_blank"><b>↗ View Live Project</b></a>\n      <br/>\n      `;
+                      card = card.replace(sourceRepoMatch[0], liveLinkHtml + sourceRepoMatch[0]);
+                      cardModified = true;
+                    }
+                  }
+                }
+
+                // If repo has a source repository URL and card doesn't have it, add it
+                if (repo.html_url && !card.includes(repo.html_url)) {
+                  const liveProjectMatch = card.match(/<a\s+href="[^"]*"[^>]*><b>↗ View Live Project<\/b><\/a>/i);
+                  if (liveProjectMatch && !card.includes('↗ Source Repository')) {
+                    const sourceLinkHtml = `\n      <br/>\n      <a href="${repo.html_url}" target="_blank"><b>↗ Source Repository</b></a>`;
+                    card = card.replace(liveProjectMatch[0], liveProjectMatch[0] + sourceLinkHtml);
+                    cardModified = true;
+                  }
+                }
+
+                if (cardModified) {
+                  updatedCards[matchingIndex] = card;
+                }
+              }
+            });
+
+            const newTableHtml = renderTable(updatedCards);
+            const before = readmeText.substring(0, startIndex + startMarker.length);
+            const after = readmeText.substring(endIndex);
+
+            const updatedReadme = before + '\n' + newTableHtml + '\n' + after;
+            const isChanged = (existingBlock !== newTableHtml);
+
+            // Safety check: verify structure is intact
+            if (!updatedReadme.includes('<!-- PROJECTS_START -->') || 
+                !updatedReadme.includes('<!-- PROJECTS_END -->') || 
+                !updatedReadme.includes('## 🚀 Featured Projects') ||
+                updatedReadme.length < (readmeText.length - 200)) {
+              return { ok: false, message: 'Safety check failed: generated README appears corrupted or incomplete.' };
+            }
+
+            return { ok: true, isChanged, updatedReadme, cardCount: updatedCards.length, newFeatured, candidateRepos, updatedCards };
+          }
+
+          function generateReport(candidateRepos, updatedCards, ownerLogin) {
+            let report = '# 📋 Repository Portfolio & Maintenance Report\n\n';
+            report += `This report tracks public repositories discovered on the **@${ownerLogin}** GitHub account and records their maintenance status in \`README.md\`.\n\n`;
+
+            report += '## 🚀 Featured Projects in README.md\n\n';
+            report += '| Repository | Primary Language | Live Demo | Source Repository | Maintenance Status |\n';
+            report += '| :--- | :--- | :--- | :--- | :--- |\n';
+
+            candidateRepos.forEach(r => {
+              const lang = r.language || 'Not specified';
+              let hpLink = 'None set';
+              if (r.homepage && typeof r.homepage === 'string' && r.homepage.startsWith('http')) {
+                hpLink = `[Live Demo](${r.homepage})`;
+              } else {
+                // Check if card has a curated live demo URL
+                const escapedName = escapeRegex(r.name);
+                const repoRegex = new RegExp(`github\\.com/${ownerLogin}/${escapedName}`, 'i');
+                const matchedCard = updatedCards.find(c => repoRegex.test(c));
+                if (matchedCard) {
+                  const m = matchedCard.match(/<a\s+href="([^"]+)"[^>]*><b>↗ View Live Project<\/b><\/a>/i);
+                  if (m) hpLink = `[Live Demo](${m[1]})`;
+                }
+              }
+              report += `| [${r.name}](${r.html_url}) | ${lang} | ${hpLink} | [Source](${r.html_url}) | Featured in README |\n`;
+            });
+
+            const hasAivon = updatedCards.some(c => c.includes('Aivon Tech'));
+            if (hasAivon) {
+              report += '| [Aivon Tech](https://theaivontech.netlify.app/) | Technology | [Live Demo](https://theaivontech.netlify.app/) | Curated Project | Featured in README |\n';
+            }
+
+            report += '\n### ℹ️ Automated Maintenance Details:\n';
+            report += '1. **Automatic Discovery & Card Generation:** Public, non-fork repositories are automatically added to the 3-column `Featured Projects` table in `README.md`.\n';
+            report += '2. **Layout Preservation:** All project cards maintain the consistent 3-column table grid, responsive layout, and visual styling.\n';
+            report += '3. **Custom Descriptions & Badges:** You can refine any project description or category badge directly in `README.md`; existing cards and customizations are always preserved.\n';
+            report += '4. **Idempotency:** When no repository updates or new projects are detected, the workflow creates zero commits.\n';
+
+            return report;
           }
 
           fetchAllPublicRepos(owner, token, (err, repos) => {
             if (err) {
               console.error(`::error::Repository discovery failed: ${err.message}`);
-              console.error('Preserving existing PROJECTS_FOR_REVIEW.md and README.md without modification.');
+              console.error('Preserving existing README.md and PROJECTS_FOR_REVIEW.md without modification.');
               process.exit(1);
             }
 
             const readme = fs.existsSync('README.md') ? fs.readFileSync('README.md', 'utf8') : '';
-
-            const unfeatured = [];
-            const featured = [];
-
-            repos.forEach(repo => {
-              if (repo.name.toLowerCase() === owner.toLowerCase()) return; // Skip profile repository
-              if (repo.fork) return; // Skip forks
-
-              if (isRepoFeatured(repo, readme, owner)) {
-                featured.push(repo);
-              } else {
-                unfeatured.push(repo);
-              }
-            });
-
-            unfeatured.sort((a, b) => a.name.localeCompare(b.name));
-            featured.sort((a, b) => a.name.localeCompare(b.name));
-
-            let report = '# 📋 Repository Review & Discovery Report\n\n';
-            report += 'This report automatically discovers public repositories on your GitHub account so you can review them and decide if you want to feature them in your curated `README.md`.\n\n';
-
-            report += '## 🆕 New Repositories Available for Review\n\n';
-            if (unfeatured.length === 0) {
-              report += '_No unfeatured public repositories found. All current public projects are already tracked or featured._\n\n';
-            } else {
-              report += '| Repository | Primary Language | Stars | Last Updated | Action Required |\n';
-              report += '| :--- | :--- | :--- | :--- | :--- |\n';
-              unfeatured.forEach(r => {
-                const lang = r.language || 'Not specified';
-                const date = r.updated_at ? r.updated_at.split('T')[0] : 'N/A';
-                report += `| [${r.name}](${r.html_url}) | ${lang} | ${r.stargazers_count} | ${date} | Pending manual review for Featured Projects |\n`;
-              });
-              report += '\n';
+            if (!readme) {
+              console.error('::error::README.md not found or empty.');
+              process.exit(1);
             }
 
-            report += '## ✅ Currently Featured or Referenced Repositories\n\n';
-            if (featured.length === 0) {
-              report += '_No public repositories currently detected in README.md._\n\n';
-            } else {
-              report += '| Repository | Primary Language | Stars | Last Updated | Status |\n';
-              report += '| :--- | :--- | :--- | :--- | :--- |\n';
-              featured.forEach(r => {
-                const lang = r.language || 'Not specified';
-                const date = r.updated_at ? r.updated_at.split('T')[0] : 'N/A';
-                report += `| [${r.name}](${r.html_url}) | ${lang} | ${r.stargazers_count} | ${date} | Featured in README |\n`;
-              });
-              report += '\n';
+            const result = updateFeaturedProjects(readme, repos, owner);
+            if (!result.ok) {
+              console.error(`::error::Failed to update Featured Projects: ${result.message}`);
+              process.exit(1);
             }
 
-            report += '### ℹ️ How to Feature a Project:\n';
-            report += '1. Inspect the new repository above.\n';
-            report += '2. If you would like to feature it, add a new card to the `Featured Projects` table in `README.md` with your verified project description and live link.\n';
-            report += '3. This workflow will never overwrite your curated project descriptions automatically.\n';
+            console.log(`Repository scan complete. Found ${repos.length} total repos.`);
+            console.log(`Current featured card count: ${result.cardCount}.`);
+            console.log(`Newly added to featured in this run: ${result.newFeatured.length}.`);
+            console.log(`README content changed: ${result.isChanged}.`);
 
+            if (result.isChanged) {
+              fs.writeFileSync('README.md', result.updatedReadme, 'utf8');
+              console.log('✅ README.md successfully updated with latest featured project cards.');
+            } else {
+              console.log('README.md is already up to date. No modifications needed.');
+            }
+
+            const report = generateReport(result.candidateRepos, result.updatedCards, owner);
             const existingReport = fs.existsSync('PROJECTS_FOR_REVIEW.md') ? fs.readFileSync('PROJECTS_FOR_REVIEW.md', 'utf8') : '';
+
             if (existingReport === report) {
-              console.log('No repository status changes detected. PROJECTS_FOR_REVIEW.md is up to date.');
+              console.log('PROJECTS_FOR_REVIEW.md is already up to date.');
             } else {
               fs.writeFileSync('PROJECTS_FOR_REVIEW.md', report, 'utf8');
-              console.log('PROJECTS_FOR_REVIEW.md updated with discovered repository changes.');
+              console.log('✅ PROJECTS_FOR_REVIEW.md updated.');
             }
 
             if (process.env.GITHUB_STEP_SUMMARY) {
-              const summaryContent = report + `\n> Discovery scan completed: ${new Date().toISOString()}\n`;
-              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summaryContent, 'utf8');
+              const summary = `### 🚀 Profile Maintenance Completed\n\n` +
+                `- **Total Featured Cards:** ${result.cardCount}\n` +
+                `- **New Repositories Added:** ${result.newFeatured.length}\n` +
+                `- **README Updated:** ${result.isChanged ? 'Yes' : 'No (Already current)'}\n\n` +
+                report;
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary, 'utf8');
             }
           });
           EOF
+
+      - name: Verify Live Project Endpoints
+        run: |
+          echo "Checking HTTP health of featured live deployment URLs..."
+          URLS=(
+            "https://theaivontech.netlify.app/"
+            "https://job-portal-2627.vercel.app/"
+            "https://clonebrand.netlify.app/"
+          )
+          for url in "${URLS[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" -m 10 "$url" || echo "000")
+            if [ "$status" = "200" ]; then
+              echo " [ONLINE] $url (HTTP $status)"
+            else
+              echo "::warning::Project endpoint $url returned HTTP $status"
+            fi
+          done
 
       - name: Check Dynamic Statistics Endpoint Availability (Preservation Mode)
         env:
@@ -301,6 +450,6 @@ jobs:
             echo "No changes detected in allowed maintenance files. Working tree clean; skipping commit."
           else
             echo "Staged files for maintenance commit: ${STAGED_FILES[*]}"
-            git commit -m "chore(profile): update repository review list [skip ci]"
+            git commit -m "chore(profile): auto-update featured projects & maintenance report [skip ci]"
             git push
           fi

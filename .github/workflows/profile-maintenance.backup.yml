@@ -1,0 +1,65 @@
+name: Profile Maintenance & Dynamic Health Check
+
+on:
+  schedule:
+    # Runs automatically every Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allows manual trigger at any time from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  profile-maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Validate Asset Integrity
+        run: |
+          echo "Checking essential profile assets..."
+          test -f README.md || (echo "README.md missing!" && exit 1)
+          test -f assets/hero.svg || (echo "assets/hero.svg missing!" && exit 1)
+          test -f assets/id.png || (echo "assets/id.png missing!" && exit 1)
+          test -f assets/right_pointing.png || (echo "assets/right_pointing.png missing!" && exit 1)
+          test -f assets/about-life.svg || (echo "assets/about-life.svg missing!" && exit 1)
+          test -f assets/stack.svg || (echo "assets/stack.svg missing!" && exit 1)
+          test -f assets/id-dashboard.svg || (echo "assets/id-dashboard.svg missing!" && exit 1)
+          test -f assets/connect.svg || (echo "assets/connect.svg missing!" && exit 1)
+          echo "All assets verified successfully."
+
+      - name: Verify Live Project Endpoints
+        run: |
+          echo "Checking live project endpoint availability..."
+          urls=(
+            "https://theaivontech.netlify.app/"
+            "https://job-portal-2627.vercel.app/"
+            "https://clonebrand.netlify.app/"
+          )
+          for url in "${urls[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
+            echo "$url -> HTTP $status"
+          done
+
+      - name: Update Dynamic Activity Cache (Safe Non-Destructive Update)
+        run: |
+          echo "Ensuring README dynamic stats markers exist and are intact..."
+          if grep -q "<!-- STATS_START -->" README.md && grep -q "<!-- STATS_END -->" README.md; then
+            echo "Dynamic section markers verified. Personal content is protected."
+          else
+            echo "Warning: Dynamic markers not found. Skipping dynamic replacement to protect content."
+          fi
+
+      - name: Commit & Push changes (if any)
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes detected. Profile is up to date."
+          else
+            git commit -m "chore(profile): automated profile health & stats update [skip ci]"
+            git push
+          fi

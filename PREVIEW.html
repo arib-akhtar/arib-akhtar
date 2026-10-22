@@ -1,37 +1,458 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Arib Akhtar — GitHub Profile Preview</title>
-<style>
-:root{color-scheme:dark;--navy:#070b16;--blue:#247bff;--red:#ff354f;--white:#f3f6ff;--muted:#9ca9c9}
-*{box-sizing:border-box}body{margin:0;background:#070b16;color:var(--white);font:16px/1.6 Arial,sans-serif}
-main{max-width:980px;margin:32px auto;padding:20px}img{display:block;width:100%;height:auto;margin:20px 0;border-radius:12px}
-h1,h2{line-height:1.2}a{color:#70a5ff} .links{display:flex;gap:12px;flex-wrap:wrap}.links a{padding:10px 14px;border:1px solid var(--blue);border-radius:8px;text-decoration:none}
-.card{border:1px solid #1d2b4a;border-radius:14px;padding:18px;margin:16px 0;background:#0d1427}
-table{width:100%;border-collapse:collapse}td{vertical-align:top;padding:12px;border:1px solid #1d2b4a}
-small{color:var(--muted)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arib Akhtar — Futuristic GitHub Profile Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030712;
+      --navy: #070b16;
+      --navy-card: #0d1427;
+      --navy-card-hover: #111b36;
+      --navy-border: #1d2b4a;
+      --blue: #247bff;
+      --blue-glow: rgba(36, 123, 255, 0.25);
+      --crimson: #ff354f;
+      --crimson-glow: rgba(255, 53, 79, 0.2);
+      --text: #f3f6ff;
+      --muted: #9ca9c9;
+      --container-width: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-width);
+      background: var(--navy);
+      border: 1px solid var(--navy-border);
+      border-radius: 20px;
+      padding: 36px 44px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 50px var(--blue-glow);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--navy-border);
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(36, 123, 255, 0.12);
+      border: 1px solid var(--blue);
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 8px #00ff88;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+      }
+    }
+
+    img.full-banner,
+    object.full-banner {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      display: block;
+      margin: 20px 0;
+      border: 1px solid var(--navy-border);
+    }
+
+    object.full-banner {
+      aspect-ratio: 1200 / 640;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--navy-border), var(--blue), var(--navy-border), transparent);
+      margin: 30px 0;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 26px 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    a {
+      color: #70a5ff;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    a:hover {
+      color: #a3c7ff;
+      text-decoration: underline;
+    }
+
+    .badges-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .badges-row img {
+      height: 28px;
+      border-radius: 4px;
+    }
+
+    .note-box {
+      border-left: 4px solid var(--blue);
+      background: var(--navy-card);
+      padding: 12px 18px;
+      border-radius: 6px;
+      margin: 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .note-box b {
+      color: var(--text);
+    }
+
+    /* Tables styled like GitHub Markdown tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 12px;
+      margin: 16px 0;
+    }
+
+    td {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      vertical-align: top;
+      color: var(--muted);
+      font-size: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    td:hover:not(:empty) {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    td:empty {
+      border: none;
+      background: transparent;
+      padding: 0;
+      transform: none;
+    }
+
+    td b {
+      color: var(--text);
+    }
+
+    /* Pointing Hero Table */
+    .hero-table {
+      border-spacing: 0;
+      margin: 16px 0;
+    }
+
+    .hero-table td {
+      background: transparent;
+      border: none;
+      padding: 12px;
+      transform: none !important;
+    }
+
+    .hero-pointing-img {
+      max-width: 310px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.8));
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 24px 0;
+    }
+
+    .stats-row img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .footer-connect {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 14px;
+      margin-top: 20px;
+    }
+
+    .footer-connect h3 {
+      font-size: 19px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .footer-connect p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
 </head>
-<body><main>
-<img src="assets/hero.svg" alt="Hero banner">
-<div style="display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap">
-  <img src="assets/id.png" alt="Arib profile portrait" style="width:min(250px,42%);margin:0">
-  <img src="assets/right_pointing.png" alt="Arib pointing toward the content" style="width:min(500px,55%);margin:0">
-</div>
-<div class="links">
-<a href="https://github.com/arib-akhtar">GitHub</a>
-<a href="https://www.linkedin.com/in/arib-akhtar-02292442b/">LinkedIn</a>
-<a href="https://www.instagram.com/arib___007/">Instagram</a>
-</div>
-<img src="assets/about-life.svg" alt="About illustration">
-<h2>About Me</h2>
-<ul><li>Interested in frontend and backend development</li><li>Learning through practical projects</li><li>Enjoys speaking, learning new things, and coding</li></ul>
-<img src="assets/stack.svg" alt="Learning map">
-<p><small>Learning areas only; not a claim of expertise in every listed technology.</small></p>
-<h2>Featured Projects</h2>
-<table><tr><td><b>Aivon Tech</b><br><a href="https://theaivontech.netlify.app/">Live project</a></td><td><b>Job Portal</b><br><a href="https://job-portal-2627.vercel.app/">Live project</a></td><td><b>Amazon Clone</b><br><a href="https://clonebrand.netlify.app/">Live project</a></td></tr></table>
-<img src="assets/id-dashboard.svg" alt="Developer dashboard">
-<img src="assets/connect.svg" alt="Connect">
-</main></body></html>
+
+<body>
+  <div class="container">
+    <div class="header-bar">
+      <span><b>arib-akhtar</b> / README.md preview</span>
+    </div>
+
+    <!-- Header Banner -->
+    <img src="assets/hero.svg" alt="Arib Akhtar — Full Stack Developer" class="full-banner">
+
+    <!-- About & Life Outside The Commit Dual Card -->
+    <img src="assets/about-life.svg" alt="Arib Akhtar — 01 / FROM THOUGHT TO THING · 02 / LIFE OUTSIDE THE COMMIT"
+      class="full-banner">
+
+    <!-- 03 / MY ENGINE ROOM — Tech Stack -->
+    <img src="assets/stack.svg" alt="Arib Akhtar — 03 / MY ENGINE ROOM · TOOLS CHANGE. CURIOSITY DOESN'T."
+      class="full-banner">
+    <div class="note-box">
+      <b>Active Learning Map:</b> The technologies below represent tools and frameworks I am actively exploring and
+      applying through practical web projects.
+    </div>
+
+    <table>
+      <tr>
+        <td style="width: 33%;">
+          <b>Frontend &amp; UI</b><br><br>
+          <img src="https://img.shields.io/badge/HTML5-070b16?style=flat-square&logo=html5&logoColor=247bff"
+            alt="HTML5"><br>
+          <img src="https://img.shields.io/badge/CSS3-070b16?style=flat-square&logo=css3&logoColor=247bff"
+            alt="CSS3"><br>
+          <img src="https://img.shields.io/badge/JavaScript-070b16?style=flat-square&logo=javascript&logoColor=ff354f"
+            alt="JavaScript"><br>
+          <img src="https://img.shields.io/badge/React-070b16?style=flat-square&logo=react&logoColor=247bff"
+            alt="React"><br>
+          <img
+            src="https://img.shields.io/badge/Tailwind_CSS-070b16?style=flat-square&logo=tailwindcss&logoColor=247bff"
+            alt="Tailwind CSS">
+        </td>
+        <td style="width: 33%;">
+          <b>Backend &amp; Database</b><br><br>
+          <img src="https://img.shields.io/badge/Node.js-070b16?style=flat-square&logo=node.js&logoColor=ff354f"
+            alt="Node.js"><br>
+          <img src="https://img.shields.io/badge/Express.js-070b16?style=flat-square&logo=express&logoColor=f3f6ff"
+            alt="Express.js"><br>
+          <img src="https://img.shields.io/badge/MongoDB-070b16?style=flat-square&logo=mongodb&logoColor=247bff"
+            alt="MongoDB"><br>
+          <img src="https://img.shields.io/badge/REST_APIs-070b16?style=flat-square&logo=fastapi&logoColor=ff354f"
+            alt="REST APIs">
+        </td>
+        <td style="width: 33%;">
+          <b>Tools &amp; Workflow</b><br><br>
+          <img src="https://img.shields.io/badge/Git-070b16?style=flat-square&logo=git&logoColor=ff354f" alt="Git"><br>
+          <img src="https://img.shields.io/badge/GitHub-070b16?style=flat-square&logo=github&logoColor=247bff"
+            alt="GitHub"><br>
+          <img
+            src="https://img.shields.io/badge/VS_Code-070b16?style=flat-square&logo=visualstudiocode&logoColor=247bff"
+            alt="VS Code"><br>
+          <img src="https://img.shields.io/badge/Vercel-070b16?style=flat-square&logo=vercel&logoColor=white"
+            alt="Vercel"><br>
+          <img src="https://img.shields.io/badge/Netlify-070b16?style=flat-square&logo=netlify&logoColor=247bff"
+            alt="Netlify">
+        </td>
+      </tr>
+    </table>
+
+    <!-- Featured Projects -->
+    <h2>🚀 Featured Projects (Things I've Built)</h2>
+    <table>
+      <tr>
+        <td style="width: 33%;">
+          <h3>01 · Aivon Tech</h3>
+          <img src="https://img.shields.io/badge/Category-Technology-247bff?style=flat-square" alt="Technology">
+          <br><br>
+          A modern technology web project crafted to present digital solutions and innovative services.
+          <br><br>
+          <a href="https://theaivontech.netlify.app/" target="_blank"><b>↗ View Live Project</b></a>
+        </td>
+        <td style="width: 33%;">
+          <h3>02 · Job Portal</h3>
+          <img src="https://img.shields.io/badge/Category-Job%20Platform-ff354f?style=flat-square" alt="Job Platform">
+          <br><br>
+          A comprehensive web application designed for job listings, career discovery, and applicant workflows.
+          <br><br>
+          <a href="https://job-portal-2627.vercel.app/" target="_blank"><b>↗ View Live Project</b></a>
+          <br>
+          <a href="https://github.com/arib-akhtar/Job-Portal" target="_blank"><b>↗ Source Repository</b></a>
+        </td>
+        <td style="width: 33%;">
+          <h3>03 · Amazon Clone</h3>
+          <img src="https://img.shields.io/badge/Category-E--Commerce-247bff?style=flat-square" alt="E-Commerce">
+          <br><br>
+          An e-commerce storefront project inspired by Amazon, featuring product catalog browsing and responsive
+          layouts.
+          <br><br>
+          <a href="https://clonebrand.netlify.app/" target="_blank"><b>↗ View Live Project</b></a>
+          <br>
+          <a href="https://github.com/arib-akhtar/Amazon-Clone" target="_blank"><b>↗ Source Repository</b></a>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 33%;">
+          <h3>04 · Service Page</h3>
+          <img src="https://img.shields.io/badge/Language-JavaScript-ff354f?style=flat-square" alt="JavaScript">
+          <br><br>
+          A responsive web application showcasing digital services with modular components and clean UI structure.
+          <br><br>
+          <a href="https://github.com/arib-akhtar/Service-Page" target="_blank"><b>↗ Source Repository</b></a>
+        </td>
+        <td style="width: 33%;"></td>
+        <td style="width: 33%;"></td>
+      </tr>
+    </table>
+
+    <!-- 04 / BUILDER CREDENTIALS & ID Dashboard -->
+    <img src="assets/id-dashboard.svg" alt="Arib Akhtar — 04 / BUILDER CREDENTIALS · REAL WORK. REAL IMPACT."
+      class="full-banner">
+
+    <!-- Highlights & Milestones -->
+    <h2>🏆 Highlights &amp; Milestones</h2>
+    <table>
+      <tr>
+        <td style="width: 50%;">
+          <b>🚀 Live Web Deployments</b><br>
+          Successfully launched functional web applications on Netlify and Vercel including the Aivon Tech showcase, Job
+          Portal platform, and Amazon clone.
+        </td>
+        <td style="width: 50%;">
+          <b>⚡ Full Stack Progression</b><br>
+          Actively developing end-to-end web applications with modern frontend libraries (React) and backend runtimes
+          (Node.js/Express).
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%;">
+          <b>📦 Public Code Repositories</b><br>
+          Open source repositories on GitHub demonstrating clean project organization, modular code, and consistent
+          version control.
+        </td>
+        <td style="width: 50%;">
+          <b>🎯 Continuous Engineering</b><br>
+          Practicing automated maintenance workflows with GitHub Actions to maintain code health and profile
+          presentation.
+        </td>
+      </tr>
+    </table>
+
+    <!-- Dynamic Stats -->
+    <!-- <h2>✦ Activity &amp; Statistics</h2>
+    <div class="stats-row">
+      <a href="https://github.com/arib-akhtar" target="_blank">
+        <img
+          src="https://github-readme-stats.vercel.app/api?username=arib-akhtar&show_icons=true&bg_color=070b16&title_color=247bff&text_color=9ca9c9&icon_color=ff354f&border_color=1d2b4a&hide_border=false"
+          alt="Arib Akhtar GitHub Stats">
+      </a>
+      <a href="https://github.com/arib-akhtar" target="_blank">
+        <img
+          src="https://github-readme-stats.vercel.app/api/top-langs/?username=arib-akhtar&layout=compact&bg_color=070b16&title_color=247bff&text_color=9ca9c9&border_color=1d2b4a&hide_border=false"
+          alt="Top Languages">
+      </a>
+    </div> -->
+
+    <!-- 05 / START A CONVERSATION — Let's Connect -->
+    <object type="image/svg+xml" data="assets/connect.svg" class="full-banner">
+      <img src="assets/connect.svg" alt="Arib Akhtar — 05 / START A CONVERSATION · LET'S CONNECT." class="full-banner">
+    </object>
+
+    <div
+      style="text-align: center; margin-top: 22px; font-size: 14px; color: var(--muted); font-family: 'Inter', sans-serif;">
+      <a href="https://www.linkedin.com/in/arib-akhtar-02292442b/" target="_blank">LinkedIn</a> &nbsp;·&nbsp;
+      <a href="https://arib-akhtar-portfolio.netlify.app/">Portfolio</a> &nbsp;·&nbsp;
+      <a href="https://www.instagram.com/arib___007/" target="_blank">Instagram</a> &nbsp;·&nbsp;
+      <a href="https://github.com/arib-akhtar" target="_blank">GitHub Profile</a>
+      <p style="font-size: 13px; color: var(--muted); margin-top: 14px;"><i>Curious by default. Building with
+          intent.</i></p>
+    </div>
+  </div>
+</body>
+
+</html>

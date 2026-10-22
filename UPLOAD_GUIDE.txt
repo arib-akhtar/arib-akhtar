@@ -1,35 +1,69 @@
-ARIB AKHTAR — GITHUB PROFILE DESIGN
-===================================
+ARIB AKHTAR — GITHUB PROFILE DESIGN & AUTOMATION
+=================================================
 
-FILES
-- README.md
-- assets/hero.svg
-- assets/id.png (your supplied transparent portrait)
-- assets/right_pointing.png (your supplied transparent pointing image)
-- assets/about-life.svg
-- assets/stack.svg
-- assets/id-dashboard.svg
-- assets/connect.svg
-- PREVIEW.html
-- UPLOAD_GUIDE.txt
+FILES IN THIS REPOSITORY:
+- README.md                               : Primary futuristic profile README with dark navy/electric blue/crimson theme.
+- README.backup.md                        : Safe backup of your original README.md prior to enhancements.
+- PREVIEW.html                            : Local high-fidelity responsive preview file (open in any web browser).
+- PROJECTS_FOR_REVIEW.md                  : Automatically generated report of newly discovered public repositories awaiting review.
+- UPLOAD_GUIDE.txt                        : This complete deployment and workflow guide.
+- .github/workflows/
+  ├── profile-maintenance.yml             : Automated GitHub Actions workflow for weekly stats refresh & repo discovery.
+  └── profile-maintenance.backup.yml      : Backup of the initial workflow file.
+- assets/
+  ├── hero.svg                            : Animated futuristic header banner with glowing orbital rings.
+  ├── id.png                              : Transparent front-facing portrait of Arib with neon rim-lighting.
+  ├── right_pointing.png                  : Half-body photo of Arib pointing directly into your bio & credentials.
+  ├── about-life.svg                      : "Curious mind. Creative builds." vector card.
+  ├── stack.svg                           : Animated learning progress map (HTML5, CSS3, JS, React, Node, Mongo, etc.).
+  ├── id-dashboard.svg                    : Developer dashboard card (Focus, Current Mode, Next Goal).
+  └── connect.svg                         : Modern terminal & message connect banner.
 
-UPLOAD STEPS
-1. Extract the ZIP on your computer.
-2. Open https://github.com/arib-akhtar/arib-akhtar
-3. Click Add file > Upload files.
-4. Upload README.md and the entire assets folder, keeping the folder structure.
-   If dragging a folder is not supported, create assets in GitHub and upload each SVG,
-   or drag all files from assets into the upload area after opening the assets folder.
-5. Ensure README.md is at the repository root and SVGs are inside assets/.
-6. Click Commit changes.
-7. Open https://github.com/arib-akhtar to view the profile.
+WHAT WAS IMPROVED & AUTOMATED:
+1. Visually Useful Pointing Image:
+   - Arib's pointing photo (right_pointing.png) is now placed side-by-side with his profile bio and ID avatar (id.png).
+   - His gesture directs visitors' attention directly to his title, mission, location, and social links.
+2. Section Hierarchy & Card Styling:
+   - Polished GitHub markdown tables, category badges, and clean spacing.
+   - Enhanced Featured Projects table with verified live links (Aivon Tech, Job Portal, Amazon Clone) and source repo links.
+3. Dynamic GitHub Statistics Cache Invalidation:
+   - Custom-themed GitHub stats and top languages widgets matching the #070b16 dark navy, #247bff electric blue, and #ff354f crimson palette.
+   - Safely refreshed by the workflow using an automatic cache-bust parameter inside <!-- STATS_START --> and <!-- STATS_END --> markers.
+   - Never alters personal copy, bio, photos, or hardcodes fake numbers.
+4. Fully Automated Featured Projects Maintenance:
+   - Automatically discovers all public, non-fork repositories on your account via GitHub API pagination.
+   - Automatically keeps the 3-column Featured Projects table in README.md updated with verified repository links, available live homepage URLs, and real repository descriptions.
+   - Preserves your existing curated projects (Aivon Tech, Job Portal, Amazon Clone) and existing personal content verbatim.
+   - Updates PROJECTS_FOR_REVIEW.md as an up-to-date repository portfolio overview.
+   - Strictly idempotent: if no repository changes occur, zero commits are created.
+5. Selective Staging & Least Privilege:
+   - Replaced `git add -A` with strict selective staging: only `README.md` and `PROJECTS_FOR_REVIEW.md` can ever be staged.
+   - Commits are only made if changes actually occurred.
+   - Operates with minimal permissions (`contents: write`).
 
-IMPORTANT
-- This package replaces the current README with the designed version.
-- SVG animations are CSS/SVG animation only; no JavaScript or foreignObject.
-- GitHub may disable some SVG animation in certain contexts. The artwork should still
-  remain readable if animation is not rendered.
-- The illustrated avatar is a decorative vector illustration, not a photorealistic
-  portrait based on your photo.
-- Project descriptions are intentionally general because source-code details were not
-  independently verified.
+REQUIRED GITHUB SETUP FOR AUTOMATION:
+- Go to your repository on GitHub: https://github.com/arib-akhtar/arib-akhtar
+- Click "Settings" > "Actions" > "General"
+- Under "Workflow permissions", ensure "Read and write permissions" is selected and click Save.
+
+HOW TO PREVIEW LOCALLY:
+- Double-click `PREVIEW.html` or open it with any web browser (Chrome, Edge, Firefox, Safari) to view the complete profile styling.
+
+HOW TO UPLOAD TO GITHUB (https://github.com/arib-akhtar/arib-akhtar):
+Method A — Via Git (Recommended):
+  1. Open a terminal in this directory:
+     cd "c:\Users\kirma\Downloads\Arib_GitHub_Profile_Design"
+  2. Initialize or connect to your repository:
+     git init
+     git remote add origin https://github.com/arib-akhtar/arib-akhtar.git
+     git branch -M main
+     git add README.md assets .github PROJECTS_FOR_REVIEW.md
+     git commit -m "feat(profile): enhance futuristic design, pointing layout, and maintenance automation"
+     git push -u origin main
+
+Method B — Via GitHub Web Interface:
+  1. Go to https://github.com/arib-akhtar/arib-akhtar
+  2. Click "Add file" > "Upload files".
+  3. Drag and drop README.md, PROJECTS_FOR_REVIEW.md, and the entire assets/ folder.
+  4. Create the workflow file `.github/workflows/profile-maintenance.yml` and paste its contents.
+  5. Visit https://github.com/arib-akhtar to view your futuristic profile!
